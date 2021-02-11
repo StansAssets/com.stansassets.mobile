@@ -1,13 +1,13 @@
 //
-//  SA_JSONModel.h
-//  SA_JSONModel
+//  JSONModel.h
+//  JSONModel
 //
 
 #import <Foundation/Foundation.h>
 
-#import "SA_JSONModelError.h"
-#import "SA_JSONValueTransformer.h"
-#import "SA_JSONKeyMapper.h"
+#import "JSONModelError.h"
+#import "JSONValueTransformer.h"
+#import "JSONKeyMapper.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 #if TARGET_IPHONE_SIMULATOR
@@ -54,9 +54,9 @@ DEPRECATED_ATTRIBUTE
 @end
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - SA_JSONModel protocol
+#pragma mark - JSONModel protocol
 /**
- * A protocol describing an abstract SA_JSONModel class
+ * A protocol describing an abstract JSONModel class
  * JSONModel conforms to this protocol, so it can use itself abstractly
  */
 @protocol AbstractJSONModelProtocol <NSCopying, NSCoding>
@@ -65,7 +65,7 @@ DEPRECATED_ATTRIBUTE
 /**
  * All JSONModel classes should implement initWithDictionary:
  *
- * For most classes the default initWithDictionary: inherited from SA_JSONModel itself
+ * For most classes the default initWithDictionary: inherited from JSONModel itself
  * should suffice, but developers have the option to also overwrite it if needed.
  *
  * @param dict a dictionary holding JSON objects, to be imported in the model.
@@ -75,7 +75,7 @@ DEPRECATED_ATTRIBUTE
 
 
 /**
- * All SA_JSONModel classes should implement initWithData:error:
+ * All JSONModel classes should implement initWithData:error:
  *
  * For most classes the default initWithData: inherited from JSONModel itself
  * should suffice, but developers have the option to also overwrite it if needed.
@@ -86,15 +86,15 @@ DEPRECATED_ATTRIBUTE
 - (instancetype)initWithData:(NSData *)data error:(NSError **)error;
 
 /**
- * All SA_JSONModel classes should be able to export themselves as a dictionary of
+ * All JSONModel classes should be able to export themselves as a dictionary of
  * JSON compliant objects.
  *
- * For most classes the inherited from SA_JSONModel default toDictionary implementation
+ * For most classes the inherited from JSONModel default toDictionary implementation
  * should suffice.
  *
  * @return NSDictionary dictionary of JSON compliant objects
  * @exception JSONModelTypeNotAllowedException thrown when one of your model's custom class properties
- * does not have matching transformer method in an SA_JSONValueTransformer.
+ * does not have matching transformer method in an JSONValueTransformer.
  */
 - (NSDictionary *)toDictionary;
 
@@ -104,24 +104,24 @@ DEPRECATED_ATTRIBUTE
  * @param propertyNames the properties to export; if nil, all properties exported
  * @return NSDictionary dictionary of JSON compliant objects
  * @exception JSONModelTypeNotAllowedException thrown when one of your model's custom class properties
- * does not have matching transformer method in an SA_JSONValueTransformer.
+ * does not have matching transformer method in an JSONValueTransformer.
  */
 - (NSDictionary *)toDictionaryWithKeys:(NSArray <NSString *> *)propertyNames;
 @end
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - SA_JSONModel interface
+#pragma mark - JSONModel interface
 /**
- * The SA_JSONModel is an abstract model class, you should not instantiate it directly,
+ * The JSONModel is an abstract model class, you should not instantiate it directly,
  * as it does not have any properties, and therefore cannot serve as a data model.
  * Instead you should subclass it, and define the properties you want your data model
  * to have as properties of your own class.
  */
-@interface SA_JSONModel : NSObject <AbstractJSONModelProtocol, NSSecureCoding>
+@interface JSONModel : NSObject <AbstractJSONModelProtocol, NSSecureCoding>
 
 // deprecated
 + (NSMutableArray *)arrayOfModelsFromDictionaries:(NSArray *)array DEPRECATED_MSG_ATTRIBUTE("use arrayOfModelsFromDictionaries:error:");
-+ (void)setGlobalKeyMapper:(SA_JSONKeyMapper *)globalKeyMapper DEPRECATED_MSG_ATTRIBUTE("override +keyMapper in a base model class instead");
++ (void)setGlobalKeyMapper:(JSONKeyMapper *)globalKeyMapper DEPRECATED_MSG_ATTRIBUTE("override +keyMapper in a base model class instead");
 + (NSString *)protocolForArrayProperty:(NSString *)propertyName DEPRECATED_MSG_ATTRIBUTE("use classForCollectionProperty:");
 - (void)mergeFromDictionary:(NSDictionary *)dict useKeyMapping:(BOOL)useKeyMapping DEPRECATED_MSG_ATTRIBUTE("use mergeFromDictionary:useKeyMapping:error:");
 - (NSString *)indexPropertyName DEPRECATED_ATTRIBUTE;
@@ -134,11 +134,11 @@ DEPRECATED_ATTRIBUTE
  * @param string JSON text data
  * @param err an initialization error or nil
  * @exception JSONModelTypeNotAllowedException thrown when unsupported type is found in the incoming JSON,
- * or a property type in your model is not supported by SA_JSONValueTransformer and its categories
+ * or a property type in your model is not supported by JSONValueTransformer and its categories
  * @see initWithString:usingEncoding:error: for use of custom text encodings
  */
-- (instancetype)initWithString:(NSString *)string error:(SA_JSONModelError **)err;
-- (instancetype)initWithChar:(char *)charArray error:(SA_JSONModelError **)err;
+- (instancetype)initWithString:(NSString *)string error:(JSONModelError **)err;
+- (instancetype)initWithChar:(char *)charArray error:(JSONModelError **)err;
 
 /**
  * Create a new model instance and initialize it with the JSON from a text parameter using the given encoding.
@@ -146,9 +146,9 @@ DEPRECATED_ATTRIBUTE
  * @param encoding the text encoding to use when parsing the string (see NSStringEncoding)
  * @param err an initialization error or nil
  * @exception JSONModelTypeNotAllowedException thrown when unsupported type is found in the incoming JSON,
- * or a property type in your model is not supported by SA_JSONValueTransformer and its categories
+ * or a property type in your model is not supported by JSONValueTransformer and its categories
  */
-- (instancetype)initWithString:(NSString *)string usingEncoding:(NSStringEncoding)encoding error:(SA_JSONModelError **)err;
+- (instancetype)initWithString:(NSString *)string usingEncoding:(NSStringEncoding)encoding error:(JSONModelError **)err;
 
 /** @name Exporting model contents */
 
@@ -188,7 +188,7 @@ DEPRECATED_ATTRIBUTE
  * @param array list of dictionaries to be imported as models
  * @return list of initialized data model objects
  * @exception JSONModelTypeNotAllowedException thrown when unsupported type is found in the incoming JSON,
- * or a property type in your model is not supported by SA_JSONValueTransformer and its categories
+ * or a property type in your model is not supported by JSONValueTransformer and its categories
  * @exception JSONModelInvalidDataException thrown when the input data does not include all required keys
  * @see arrayOfDictionariesFromModels:
  */
@@ -202,10 +202,10 @@ DEPRECATED_ATTRIBUTE
 /**
  * If you have an NSArray of data model objects, this method takes it in and outputs a list of the
  * matching dictionaries. This method does the opposite of arrayOfObjectsFromDictionaries:
- * @param array list of SA_JSONModel objects
+ * @param array list of JSONModel objects
  * @return a list of NSDictionary objects
  * @exception JSONModelTypeNotAllowedException thrown when unsupported type is found in the incoming JSON,
- * or a property type in your model is not supported by SA_JSONValueTransformer and its categories
+ * or a property type in your model is not supported by JSONValueTransformer and its categories
  * @see arrayOfModelsFromDictionaries:
  */
 + (NSMutableArray *)arrayOfDictionariesFromModels:(NSArray *)array;
@@ -215,7 +215,7 @@ DEPRECATED_ATTRIBUTE
 
 /**
  * Overwrite the validate method in your own models if you need to perform some custom validation over the model data.
- * This method gets called at the very end of the SA_JSONModel initializer, thus the model is in the state that you would
+ * This method gets called at the very end of the JSONModel initializer, thus the model is in the state that you would
  * get it back when initialized. Check the values of any property that needs to be validated and if any invalid values
  * are encountered return NO and set the error parameter to an NSError object. If the model is valid return YES.
  *
@@ -223,16 +223,16 @@ DEPRECATED_ATTRIBUTE
  *
  * @param error a pointer to an NSError object, to pass back an error if needed
  * @return a BOOL result, showing whether the model data validates or not. You can use the convenience method
- * [SA_JSONModelError errorModelIsInvalid] to set the NSError param if the data fails your custom validation
+ * [JSONModelError errorModelIsInvalid] to set the NSError param if the data fails your custom validation
  */
 - (BOOL)validate:(NSError **)error;
 
 /** @name Key mapping */
 /**
  * Overwrite in your models if your property names don't match your JSON key names.
- * Lookup SA_JSONKeyMapper docs for more details.
+ * Lookup JSONKeyMapper docs for more details.
  */
-+ (SA_JSONKeyMapper *)keyMapper;
++ (JSONKeyMapper *)keyMapper;
 
 /**
  * Indicates whether the property with the given name is Optional.

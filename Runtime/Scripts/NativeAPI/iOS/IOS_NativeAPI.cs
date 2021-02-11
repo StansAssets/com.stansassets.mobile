@@ -16,27 +16,27 @@ namespace com.stansassets.mobile
         const string k_DllName = "__Internal";
 
         [DllImport(k_DllName)]
-        static extern IntPtr SA_GetPointerForFile(string url, out int size);
+        static extern IntPtr _ISN_GetPointerForFile(string url, out int size);
 
         [DllImport(k_DllName)]
-        static extern IntPtr SA_GetDataPointerFromBuffer(int hash, out int size);
+        static extern IntPtr _ISN_GetDataPointerFromBuffer(int hash, out int size);
 
         [DllImport(k_DllName)]
-        static extern int SA_SaveDataByPointerInBuffer(IntPtr pointer, int size);
+        static extern int _ISN_SaveDataByPointerInBuffer(IntPtr pointer, int size);
 
         [DllImport(k_DllName)]
-        static extern IntPtr SA_GetDataByPointer(IntPtr pointer, int size);
+        static extern IntPtr _ISN_GetDataByPointer(IntPtr pointer, int size);
 
         [DllImport(k_DllName)]
-        static extern void SA_ReleaseData(IntPtr pointer);
+        static extern void _ISN_ReleaseData(IntPtr pointer);
 
         [DllImport(k_DllName)]
-        static extern void SA_RemoveDataFromBuffer(int hash);
+        static extern void _ISN_RemoveDataFromBuffer(int hash);
 #endif
 
         public IntPtr GetPointerFromUrl(string url, out int size) {
 #if API_ENABLED
-            return SA_GetPointerForFile(url, out size);
+            return _ISN_GetPointerForFile(url, out size);
 #else
             return IntPtr.Zero;
 #endif
@@ -58,7 +58,7 @@ namespace com.stansassets.mobile
 #if API_ENABLED
             var pointer = Marshal.AllocHGlobal(data.Length);
             Marshal.Copy(data, 0, pointer, data.Length);
-            return SA_SaveDataByPointerInBuffer(pointer, data.Length);
+            return _ISN_SaveDataByPointerInBuffer(pointer, data.Length);
 #else
             return 0;
 #endif
@@ -90,13 +90,13 @@ namespace com.stansassets.mobile
 
         public void ReleaseData(IntPtr pointer) {
 #if API_ENABLED
-            SA_ReleaseData(pointer);
+            _ISN_ReleaseData(pointer);
 #endif
         }
 
         public void RemoveDataFromBuffer(int hash) {
 #if API_ENABLED
-            SA_RemoveDataFromBuffer(hash);
+            _ISN_RemoveDataFromBuffer(hash);
 #endif
         }
     }

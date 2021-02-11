@@ -1,4 +1,4 @@
-#import "SA_Foundation.h"
+#import "ISN_Foundation.h"
 
 //--------------------------------------
 // Extentions
@@ -36,7 +36,7 @@ typedef void (*MonoPCallbackDelegate)(UnityAction action, const char* data);
 
 static MonoPCallbackDelegate _monoPCallbackDelegate = NULL;
 
-FOUNDATION_EXPORT void SA_RegisterCallbackDelegate(MonoPCallbackDelegate callbackDelegate) {
+FOUNDATION_EXPORT void ISN_RegisterCallbackDelegate(MonoPCallbackDelegate callbackDelegate) {
     _monoPCallbackDelegate = callbackDelegate;
 }
 
@@ -50,7 +50,7 @@ static NSMutableDictionary *objectsRefStorage = nil;
 extern "C" {
 #endif
 
-    int _SA_SaveObjectRef(NSObject* object) {
+    int _ISN_SaveObjectRef(NSObject* object) {
 
         if(objectsRefStorage == nil) {
             objectsRefStorage = [[NSMutableDictionary alloc] init];
@@ -63,32 +63,32 @@ extern "C" {
         return num.intValue;
     }
 
-    NSObject* _SA_GetObjectRef(int hash) {
+    NSObject* _ISN_GetObjectRef(int hash) {
         NSNumber *num  = [NSNumber numberWithInt:hash];
         return [objectsRefStorage objectForKey:num];
     }
     
-    char* SA_ConvertToChar(NSString* nsString) {
+    char* _ISN_ConvertToChar(NSString* nsString) {
         const char* string = [nsString UTF8String];
         char* res = (char*)malloc(strlen(string) + 1);
         strcpy(res, string);
         return res;
     }
 
-    NSString* SA_ConvertBoolToString(BOOL value) {
+    NSString* _ISN_ConvertBoolToString(BOOL value) {
         return value ? @"true" : @"false";
     }
 
-    NSString* SA_ConvertToString(char* data) {
+    NSString* _ISN_ConvertToString(char* data) {
         return data == NULL ? [NSString stringWithUTF8String: ""] : [NSString stringWithUTF8String: data];
     }
 
-    NSString* SA_ConvertToBase64(NSData* data) {
+    NSString* _ISN_ConvertToBase64(NSData* data) {
         return [data base64EncodedStringWithOptions:0];
     }
 
     // Этот метод можно объявить в каком-нибудь классе
-    void SA_SendCallbackToUnity(UnityAction callback, NSString* data) {
+    void _ISN_SendCallbackToUnity(UnityAction callback, NSString* data) {
         if(callback == NULL)
             return;
 

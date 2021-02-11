@@ -9,6 +9,10 @@ namespace com.stansassets.mobile
             return NativeLib.API.GetDataFromUrl(url);
         }
 
+        public static byte[] GetDataFromBufferr(int hash) {
+            return NativeLib.API.GetDataFromBufferr(hash);
+        }
+
         public static byte[] GetDataByPointer(IntPtr pointer, int size) {
             return NativeLib.API.GetDataFromPointer(pointer, size);
         }

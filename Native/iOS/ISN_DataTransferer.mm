@@ -6,12 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SA_Foundation.h"
+#import "ISN_Foundation.h"
 
 static NSMutableDictionary *dataBuffer = nil;
 
 extern "C" {
-    void* SA_GetPointerForFile(char *url, int *size) {
+    void* _ISN_GetPointerForFile(char *url, int *size) {
         NSURL *nsurl = [NSURL fileURLWithPath:[NSString stringWithUTF8String:url]];
         NSError *error;
         NSMutableData *data = [NSMutableData dataWithContentsOfURL:nsurl options:NSDataReadingMapped error:&error];
@@ -22,7 +22,7 @@ extern "C" {
         return [data mutableBytes];
     }
     
-    void* SA_GetDataPointerFromBuffer(int hash, int* size) {
+    void* _ISN_GetDataPointerFromBuffer(int hash, int* size) {
         if (dataBuffer) {
             NSNumber *num  = [NSNumber numberWithInt:hash];
             NSMutableData *data = [dataBuffer objectForKey:num];
@@ -35,17 +35,17 @@ extern "C" {
         return nil;
     }
     
-    void* SA_GetDataByPointer(CFTypeRef pointer, int size) {
+    void* _ISN_GetDataByPointer(CFTypeRef pointer, int size) {
         NSMutableData *data = [NSMutableData dataWithBytes:pointer length:size];
         return [data mutableBytes];
     }
     
-    int SA_SaveDataByPointerInBuffer(CFTypeRef pointer, int size) {
+    int _ISN_SaveDataByPointerInBuffer(CFTypeRef pointer, int size) {
         NSData *data = [NSData dataWithBytes:pointer length:(NSUInteger)size];
         return SA_SaveDataInBuffer(data);
     }
     
-    int SA_SaveDataInBuffer(NSData *data) {
+    int _ISN_SaveDataInBuffer(NSData *data) {
         NSInteger hash = data.hash;
         if(dataBuffer == nil) {
             dataBuffer = [[NSMutableDictionary alloc] init];
@@ -55,20 +55,20 @@ extern "C" {
         return num.intValue;
     }
     
-    void SA_ClearBuffer() {
+    void _ISN_ClearBuffer() {
         dataBuffer = nil;
     }
     
-    void SA_ReleaseData(void* pointer) {
+    void _ISN_ReleaseData(void* pointer) {
         CFBridgingRelease(pointer);
     }
     
-    void SA_RemoveDataFromBuffer(int hash) {
+    void _ISN_RemoveDataFromBuffer(int hash) {
         NSNumber *num  = [NSNumber numberWithInt:hash];
         [dataBuffer removeObjectForKey:num];
     }
     
-    NSData* SA_SendFileByPointer(CFTypeRef pointer, int size) {
+    NSData* _ISN_SendFileByPointer(CFTypeRef pointer, int size) {
         return [NSData dataWithBytes:pointer length:(NSUInteger)size];
     }
 }

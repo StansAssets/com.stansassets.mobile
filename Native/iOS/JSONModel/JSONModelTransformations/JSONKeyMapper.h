@@ -1,6 +1,6 @@
 //
-//  SA_JSONKeyMapper.h
-//  SA_JSONModel
+//  JSONKeyMapper.h
+//  JSONModel
 //
 
 #import <Foundation/Foundation.h>
@@ -21,30 +21,30 @@ typedef NSString *(^JSONModelKeyMapBlock)(NSString *keyName);
  * To comply with Obj-C accepted camelCase property naming for your classes,
  * you need to provide mapping between JSON keys and ObjC property names.
  *
- * In your model overwrite the + (SA_JSONKeyMapper *)keyMapper method and provide a SA_JSONKeyMapper
+ * In your model overwrite the + (JSONKeyMapper *)keyMapper method and provide a JSONKeyMapper
  * instance to convert the key names for your model.
  *
  * If you need custom mapping it's as easy as:
  * <pre>
- * + (SA_JSONKeyMapper *)keyMapper {
- * &nbsp; return [[SA_JSONKeyMapper&nbsp;alloc]&nbsp;initWithDictionary:@{@"crazy_JSON_name":@"myCamelCaseName"}];
+ * + (JSONKeyMapper *)keyMapper {
+ * &nbsp; return [[JSONKeyMapper&nbsp;alloc]&nbsp;initWithDictionary:@{@"crazy_JSON_name":@"myCamelCaseName"}];
  * }
  * </pre>
  * In case you want to handle underscore_case, **use the predefined key mapper**, like so:
  * <pre>
- * + (SA_JSONKeyMapper *)keyMapper {
+ * + (JSONKeyMapper *)keyMapper {
  * &nbsp; return [JSONKeyMapper&nbsp;mapperFromUnderscoreCaseToCamelCase];
  * }
  * </pre>
  */
-@interface SA_JSONKeyMapper : NSObject
+@interface JSONKeyMapper : NSObject
 
 // deprecated
 @property (readonly, nonatomic) JSONModelKeyMapBlock JSONToModelKeyBlock DEPRECATED_ATTRIBUTE;
 - (NSString *)convertValue:(NSString *)value isImportingToModel:(BOOL)importing DEPRECATED_MSG_ATTRIBUTE("use convertValue:");
 - (instancetype)initWithDictionary:(NSDictionary *)map DEPRECATED_MSG_ATTRIBUTE("use initWithModelToJSONDictionary:");
 - (instancetype)initWithJSONToModelBlock:(JSONModelKeyMapBlock)toModel modelToJSONBlock:(JSONModelKeyMapBlock)toJSON DEPRECATED_MSG_ATTRIBUTE("use initWithModelToJSONBlock:");
-+ (instancetype)mapper:(SA_JSONKeyMapper *)baseKeyMapper withExceptions:(NSDictionary *)exceptions DEPRECATED_MSG_ATTRIBUTE("use baseMapper:withModelToJSONExceptions:");
++ (instancetype)mapper:(JSONKeyMapper *)baseKeyMapper withExceptions:(NSDictionary *)exceptions DEPRECATED_MSG_ATTRIBUTE("use baseMapper:withModelToJSONExceptions:");
 + (instancetype)mapperFromUnderscoreCaseToCamelCase DEPRECATED_MSG_ATTRIBUTE("use mapperForSnakeCase:");
 + (instancetype)mapperFromUpperCaseToLowerCase DEPRECATED_ATTRIBUTE;
 
@@ -91,6 +91,6 @@ typedef NSString *(^JSONModelKeyMapBlock)(NSString *keyName);
  * Creates a JSONKeyMapper based on a built-in JSONKeyMapper, with specific exceptions.
  * Use your JSONModel property names as keys, and the JSON key names as values.
  */
-+ (instancetype)baseMapper:(SA_JSONKeyMapper *)baseKeyMapper withModelToJSONExceptions:(NSDictionary *)toJSON;
++ (instancetype)baseMapper:(JSONKeyMapper *)baseKeyMapper withModelToJSONExceptions:(NSDictionary *)toJSON;
 
 @end

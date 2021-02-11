@@ -16,7 +16,7 @@ namespace com.stansassets.mobile
 
 #if API_ENABLED
         [DllImport(k_DllName)]
-        static extern void SA_RegisterCallbackDelegate(MonoPCallbackDelegate callbackDelegate);
+        static extern void ISN_RegisterCallbackDelegate(MonoPCallbackDelegate callbackDelegate);
 #endif
 
         delegate void MonoPCallbackDelegate(IntPtr actionPtr, string data);
@@ -24,7 +24,7 @@ namespace com.stansassets.mobile
 #if API_ENABLED
         [RuntimeInitializeOnLoadMethod]
         static void Initialize() {
-            if (!Application.isEditor) SA_RegisterCallbackDelegate(MonoPCallbackInvoke);
+            if (!Application.isEditor) ISN_RegisterCallbackDelegate(MonoPCallbackInvoke);
         }
 #endif
 

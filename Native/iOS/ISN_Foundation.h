@@ -1,4 +1,4 @@
-#import "SA_JSONModel.h"
+#import "JSONModel.h"
 
 //--------------------------------------
 // Extentions
@@ -33,22 +33,22 @@ void SendCallbackDataToUnity(UnityAction callback, NSString* data);
 extern "C" {
 #endif
     char* SA_ConvertToChar(NSString* nsString);
-    NSString* SA_ConvertToString(char* data);
-    NSString* SA_ConvertBoolToString(BOOL value);
+    NSString* ISN_ConvertToString(char* data);
+    NSString* ISN_ConvertBoolToString(BOOL value);
     
-    void SA_SendCallbackToUnity(UnityAction callback, NSString* data);
-    NSString* SA_ConvertToBase64(NSData* data);
+    void ISN_SendCallbackToUnity(UnityAction callback, NSString* data);
+    NSString* ISN_ConvertToBase64(NSData* data);
 
     // MARK: Data Transderer
-    void* SA_GetPointerForFile(char *url, int *size);
-    void* SA_GetDataPointerFromBuffer(int hash, int* size);
-    int SA_SaveDataByPointerInBuffer(CFTypeRef pointer, int size);
-    void* SA_GetDataByPointer(CFTypeRef pointer, int size);
-    int SA_SaveDataInBuffer(NSData *data);
-    void SA_ClearBuffer();
-    void SA_ReleaseData(void* pointer);
-    void SA_RemoveDataFromBuffer(int hash);
-    NSData* SA_SendFileByPointer(CFTypeRef pointer, int size);
+    void* ISN_GetPointerForFile(char *url, int *size);
+    void* ISN_GetDataPointerFromBuffer(int hash, int* size);
+    int ISN_SaveDataByPointerInBuffer(CFTypeRef pointer, int size);
+    void* ISN_GetDataByPointer(CFTypeRef pointer, int size);
+    int ISN_SaveDataInBuffer(NSData *data);
+    void ISN_ClearBuffer();
+    void ISN_ReleaseData(void* pointer);
+    void ISN_RemoveDataFromBuffer(int hash);
+    NSData* ISN_SendFileByPointer(CFTypeRef pointer, int size);
     
 #if __cplusplus
 }   // Extern C

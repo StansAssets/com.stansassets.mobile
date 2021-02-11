@@ -1,11 +1,11 @@
 //
-//  SA_JSONKeyMapper.m
-//  SA_JSONModel
+//  JSONKeyMapper.m
+//  JSONModel
 //
 
-#import "SA_JSONKeyMapper.h"
+#import "JSONKeyMapper.h"
 
-@implementation SA_JSONKeyMapper
+@implementation JSONKeyMapper
 
 - (instancetype)initWithJSONToModelBlock:(JSONModelKeyMapBlock)toModel modelToJSONBlock:(JSONModelKeyMapBlock)toJSON
 {
@@ -24,7 +24,7 @@
 
 - (instancetype)initWithDictionary:(NSDictionary *)map
 {
-    NSDictionary *toJSON  = [SA_JSONKeyMapper swapKeysAndValuesInDictionary:map];
+    NSDictionary *toJSON  = [JSONKeyMapper swapKeysAndValuesInDictionary:map];
 
     return [self initWithModelToJSONDictionary:toJSON];
 }
@@ -122,14 +122,14 @@
     }];
 }
 
-+ (instancetype)mapper:(SA_JSONKeyMapper *)baseKeyMapper withExceptions:(NSDictionary *)exceptions
++ (instancetype)mapper:(JSONKeyMapper *)baseKeyMapper withExceptions:(NSDictionary *)exceptions
 {
-    NSDictionary *toJSON = [SA_JSONKeyMapper swapKeysAndValuesInDictionary:exceptions];
+    NSDictionary *toJSON = [JSONKeyMapper swapKeysAndValuesInDictionary:exceptions];
 
     return [self baseMapper:baseKeyMapper withModelToJSONExceptions:toJSON];
 }
 
-+ (instancetype)baseMapper:(SA_JSONKeyMapper *)baseKeyMapper withModelToJSONExceptions:(NSDictionary *)toJSON
++ (instancetype)baseMapper:(JSONKeyMapper *)baseKeyMapper withModelToJSONExceptions:(NSDictionary *)toJSON
 {
     return [[self alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName)
     {

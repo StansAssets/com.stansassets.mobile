@@ -1,11 +1,11 @@
 //
-//  SA_JSONModelClassProperty.m
-//  SA_JSONModel
+//  JSONModelClassProperty.m
+//  JSONModel
 //
 
-#import "SA_JSONModelClassProperty.h"
+#import "JSONModelClassProperty.h"
 
-@implementation SA_JSONModelClassProperty
+@implementation JSONModelClassProperty
 
 -(NSString*)description
 {

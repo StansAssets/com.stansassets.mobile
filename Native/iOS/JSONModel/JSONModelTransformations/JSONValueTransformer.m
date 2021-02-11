@@ -3,10 +3,10 @@
 //  JSONModel
 //
 
-#import "SA_JSONValueTransformer.h"
+#import "JSONValueTransformer.h"
 
 #pragma mark - functions
-extern BOOL isValueNull(id value)
+extern BOOL isNull(id value)
 {
     if (!value) return YES;
     if ([value isKindOfClass:[NSNull class]]) return YES;
@@ -14,7 +14,7 @@ extern BOOL isValueNull(id value)
     return NO;
 }
 
-@implementation SA_JSONValueTransformer
+@implementation JSONValueTransformer
 
 -(id)init
 {
@@ -108,7 +108,7 @@ extern BOOL isValueNull(id value)
 #pragma mark - BOOL <-> number/string
 -(NSNumber*)BOOLFromNSNumber:(NSNumber*)number
 {
-    if (isValueNull(number)) return [NSNumber numberWithBool:NO];
+    if (isNull(number)) return [NSNumber numberWithBool:NO];
     return [NSNumber numberWithBool: number.intValue==0?NO:YES];
 }
 
