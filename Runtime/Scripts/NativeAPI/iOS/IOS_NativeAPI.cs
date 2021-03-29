@@ -16,28 +16,35 @@ namespace com.stansassets.mobile
         const string k_DllName = "__Internal";
 
         [DllImport(k_DllName)]
-        static extern IntPtr SA_GetPointerForFile(string url, out int size);
+        static extern IntPtr _ISN_GetPointerForFile(string url, out int size);
 
         [DllImport(k_DllName)]
-        static extern IntPtr SA_GetDataPointerFromBuffer(int hash, out int size);
+        static extern IntPtr _ISN_GetDataPointerFromBuffer(int hash, out int size);
 
         [DllImport(k_DllName)]
-        static extern int SA_SaveDataByPointerInBuffer(IntPtr pointer, int size);
+        static extern int _ISN_SaveDataByPointerInBuffer(IntPtr pointer, int size);
 
         [DllImport(k_DllName)]
-        static extern IntPtr SA_GetDataByPointer(IntPtr pointer, int size);
+        static extern IntPtr _ISN_GetDataByPointer(IntPtr pointer, int size);
 
         [DllImport(k_DllName)]
-        static extern void SA_ReleaseData(IntPtr pointer);
+        static extern IntPtr _ISN_GetNSMutableDataByPointer(IntPtr pointer, out int size);
 
         [DllImport(k_DllName)]
-        static extern void SA_RemoveDataFromBuffer(int hash);
+        static extern void _ISN_ReleaseData(IntPtr pointer);
+
+        [DllImport(k_DllName)]
+        static extern void _ISN_RemoveDataFromBuffer(int hash);
+
+        [DllImport(k_DllName)]
+        static extern void _ISN_ClearBuffer();
 #endif
 
         public IntPtr GetPointerFromUrl(string url, out int size) {
 #if API_ENABLED
-            return SA_GetPointerForFile(url, out size);
+            return _ISN_GetPointerForFile(url, out size);
 #else
+            size = 0;
             return IntPtr.Zero;
 #endif
         }
@@ -46,6 +53,9 @@ namespace com.stansassets.mobile
 #if API_ENABLED
             int size = 0;
             var pointer = GetPointerFromUrl(url, out size);
+            if (size == 0) {
+                return null;
+            }
             var data = new byte[size];
             Marshal.Copy(pointer, data, 0, size);
             return data;
@@ -58,16 +68,19 @@ namespace com.stansassets.mobile
 #if API_ENABLED
             var pointer = Marshal.AllocHGlobal(data.Length);
             Marshal.Copy(data, 0, pointer, data.Length);
-            return SA_SaveDataByPointerInBuffer(pointer, data.Length);
+            return _ISN_SaveDataByPointerInBuffer(pointer, data.Length);
 #else
             return 0;
 #endif
         }
 
-        public byte[] GetDataFromBufferr(int hash) {
+        public byte[] GetDataFromBuffer(int hash) {
 #if API_ENABLED
             int size = 0;
-            var pointer = SA_GetDataPointerFromBuffer(hash, out size);
+            var pointer = _ISN_GetDataPointerFromBuffer(hash, out size);
+            if (size == 0) {
+                return null;
+            }
             var data = new byte[size];
             Marshal.Copy(pointer, data, 0, size);
             return data;
@@ -78,9 +91,14 @@ namespace com.stansassets.mobile
 
         public byte[] GetDataFromPointer(IntPtr pointer, int size) {
 #if API_ENABLED
-            var dataHandler = SA_GetDataByPointer(pointer, size);
+            var dataHandler = size == 0 ?
+                _ISN_GetNSMutableDataByPointer(pointer, out size) :
+                _ISN_GetDataByPointer(pointer, size);
+            if (size == 0) {
+                return null;
+            }
             var data = new byte[size];
-            Marshal.Copy(pointer, data, 0, size);
+            Marshal.Copy(dataHandler, data, 0, size);
             ReleaseData(pointer);
             return data;
 #else
@@ -90,13 +108,19 @@ namespace com.stansassets.mobile
 
         public void ReleaseData(IntPtr pointer) {
 #if API_ENABLED
-            SA_ReleaseData(pointer);
+            _ISN_ReleaseData(pointer);
 #endif
         }
 
         public void RemoveDataFromBuffer(int hash) {
 #if API_ENABLED
-            SA_RemoveDataFromBuffer(hash);
+            _ISN_RemoveDataFromBuffer(hash);
+#endif
+        }
+
+        public void ClearBuffer() {
+#if  API_ENABLED
+            _ISN_ClearBuffer();
 #endif
         }
     }
