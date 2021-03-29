@@ -14,10 +14,11 @@ extern "C" {
     void* _ISN_GetPointerForFile(char *url, int *size) {
         NSURL *nsurl = [NSURL fileURLWithPath:[NSString stringWithUTF8String:url]];
         NSError *error;
-        NSMutableData *data = [NSMutableData dataWithContentsOfURL:nsurl options:NSDataReadingMapped error:&error];
         if (error) {
             NSLog(@"We got error when tried to read file - %@", error.description);
+            return nil;
         }
+        NSMutableData *data = [NSMutableData dataWithContentsOfURL:nsurl options:NSDataReadingMapped error:&error];
         *size = (int)data.length;
         return [data mutableBytes];
     }
@@ -36,13 +37,18 @@ extern "C" {
     }
     
     void* _ISN_GetDataByPointer(CFTypeRef pointer, int size) {
-        NSMutableData *data = [NSMutableData dataWithBytes:pointer length:size];
+        NSMutableData *data = [NSMutableData dataWithBytes:pointer length:(NSUInteger)size];
         return [data mutableBytes];
+    }
+    
+    void* _ISN_GetNSMutableDataByPointer(NSMutableData* rawData,  int* size) {
+        *size = (int)rawData.length;
+        return [rawData mutableBytes];
     }
     
     int _ISN_SaveDataByPointerInBuffer(CFTypeRef pointer, int size) {
         NSData *data = [NSData dataWithBytes:pointer length:(NSUInteger)size];
-        return SA_SaveDataInBuffer(data);
+        return ISN_SaveDataInBuffer(data);
     }
     
     int _ISN_SaveDataInBuffer(NSData *data) {

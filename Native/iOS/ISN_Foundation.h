@@ -1,4 +1,52 @@
 #import "JSONModel.h"
+#import "ISN_Logger.h"
+#import "ISN_HashStorage.h"
+
+
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
+//--------------------------------------
+// Constants
+//--------------------------------------
+
+extern const char* UNITY_SK_LISTENER;
+extern const char* UNITY_RP_LISTENER;
+extern const char* UNITY_CN_LISTENER;
+extern const char* UNITY_AV_LISTENER;
+extern const char* UNITY_UI_LISTENER;
+extern const char* UNITY_CK_LISTENER;
+extern const char* UNITY_UN_LISTENER;
+
+extern const char* UNITY_APP_DELEGATE;
+
+
+//--------------------------------------
+// Templates
+//--------------------------------------
+
+@interface SA_Error : JSONModel
+@property (nonatomic) int m_code;
+@property (nonatomic, strong) NSString *m_message;
+
+-(id) initWithCode:(int)code message:(NSString* ) message;
+-(id) initWithNSError:(NSError *) error;
+@end
+
+
+@interface SA_Result : JSONModel
+@property (nonatomic, strong) SA_Error *m_error;
+@property (nonatomic, strong) NSString *m_requestId;
+
+-(id) initWithError:(SA_Error*)error;
+-(id) initWithNSError:(NSError *) error;
+
+-(void) setRequestId:(NSString *) requestId;
+-(void) setData:(NSString *) data;
+@end
 
 //--------------------------------------
 // Extentions
@@ -32,18 +80,22 @@ void SendCallbackDataToUnity(UnityAction callback, NSString* data);
 #ifdef __cplusplus
 extern "C" {
 #endif
-    char* SA_ConvertToChar(NSString* nsString);
+    char* ISN_ConvertToChar(NSString* nsString);
     NSString* ISN_ConvertToString(char* data);
     NSString* ISN_ConvertBoolToString(BOOL value);
-    
-    void ISN_SendCallbackToUnity(UnityAction callback, NSString* data);
     NSString* ISN_ConvertToBase64(NSData* data);
+    NSString* ISN_ConvertImageToBase64(UIImage* image);
+    NSString* ISN_ConvertImageToJPEGBase64(UIImage* image, CGFloat compression);
+
+    void  ISN_SendMessage(const char* obj, const char* method, NSString* msg);
+    void ISN_SendCallbackToUnity(UnityAction callback, NSString* data);
 
     // MARK: Data Transderer
     void* ISN_GetPointerForFile(char *url, int *size);
     void* ISN_GetDataPointerFromBuffer(int hash, int* size);
     int ISN_SaveDataByPointerInBuffer(CFTypeRef pointer, int size);
     void* ISN_GetDataByPointer(CFTypeRef pointer, int size);
+    void* ISN_GetNSMutableDataByPointer(NSMutableData *pointer, int *size);
     int ISN_SaveDataInBuffer(NSData *data);
     void ISN_ClearBuffer();
     void ISN_ReleaseData(void* pointer);
@@ -53,4 +105,3 @@ extern "C" {
 #if __cplusplus
 }   // Extern C
 #endif
-

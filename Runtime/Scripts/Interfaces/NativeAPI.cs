@@ -7,11 +7,12 @@ namespace com.stansassets.mobile
         IntPtr GetPointerFromUrl(string url, out int size);
         byte[] GetDataFromUrl(string url);
         byte[] GetDataFromPointer(IntPtr pointer, int size);
-        byte[] GetDataFromBufferr(int hash);
+        byte[] GetDataFromBuffer(int hash);
 
         int SaveDataInBuffer(byte[] data);
 
         void ReleaseData(IntPtr pointer);
         void RemoveDataFromBuffer(int hash);
+        void ClearBuffer();
     }
 }

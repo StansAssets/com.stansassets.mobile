@@ -28,16 +28,23 @@ namespace com.stansassets.mobile
         static extern IntPtr _ISN_GetDataByPointer(IntPtr pointer, int size);
 
         [DllImport(k_DllName)]
+        static extern IntPtr _ISN_GetNSMutableDataByPointer(IntPtr pointer, out int size);
+
+        [DllImport(k_DllName)]
         static extern void _ISN_ReleaseData(IntPtr pointer);
 
         [DllImport(k_DllName)]
         static extern void _ISN_RemoveDataFromBuffer(int hash);
+
+        [DllImport(k_DllName)]
+        static extern void _ISN_ClearBuffer();
 #endif
 
         public IntPtr GetPointerFromUrl(string url, out int size) {
 #if API_ENABLED
             return _ISN_GetPointerForFile(url, out size);
 #else
+            size = 0;
             return IntPtr.Zero;
 #endif
         }
@@ -46,6 +53,9 @@ namespace com.stansassets.mobile
 #if API_ENABLED
             int size = 0;
             var pointer = GetPointerFromUrl(url, out size);
+            if (size == 0) {
+                return null;
+            }
             var data = new byte[size];
             Marshal.Copy(pointer, data, 0, size);
             return data;
@@ -64,10 +74,13 @@ namespace com.stansassets.mobile
 #endif
         }
 
-        public byte[] GetDataFromBufferr(int hash) {
+        public byte[] GetDataFromBuffer(int hash) {
 #if API_ENABLED
             int size = 0;
-            var pointer = SA_GetDataPointerFromBuffer(hash, out size);
+            var pointer = _ISN_GetDataPointerFromBuffer(hash, out size);
+            if (size == 0) {
+                return null;
+            }
             var data = new byte[size];
             Marshal.Copy(pointer, data, 0, size);
             return data;
@@ -78,9 +91,14 @@ namespace com.stansassets.mobile
 
         public byte[] GetDataFromPointer(IntPtr pointer, int size) {
 #if API_ENABLED
-            var dataHandler = SA_GetDataByPointer(pointer, size);
+            var dataHandler = size == 0 ?
+                _ISN_GetNSMutableDataByPointer(pointer, out size) :
+                _ISN_GetDataByPointer(pointer, size);
+            if (size == 0) {
+                return null;
+            }
             var data = new byte[size];
-            Marshal.Copy(pointer, data, 0, size);
+            Marshal.Copy(dataHandler, data, 0, size);
             ReleaseData(pointer);
             return data;
 #else
@@ -97,6 +115,12 @@ namespace com.stansassets.mobile
         public void RemoveDataFromBuffer(int hash) {
 #if API_ENABLED
             _ISN_RemoveDataFromBuffer(hash);
+#endif
+        }
+
+        public void ClearBuffer() {
+#if  API_ENABLED
+            _ISN_ClearBuffer();
 #endif
         }
     }
