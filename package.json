@@ -3,5 +3,24 @@
   "displayName": "Stans Assets Mobile",
   "version": "0.0.1",
   "unity": "2019.4",
-  "description": "Stans Assets Mobile utilities package."
+  "description": "Stans Assets Mobile utilities package.",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/StansAssets/com.stansassets.mobile.git"
+  },
+  "keywords": [
+    "plugins",
+    "packages",
+    "sdk"
+  ],
+  "author": {
+      "name": "Stan's Assets",
+      "email": "stan@stansassets.com",
+      "url": "https://stansassets.com/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/StansAssets/com.stansassets.mobile/issues"
+  },
+  "homepage": "https://github.com/StansAssets/com.stansassets.mobile#readme"
 }
