@@ -48,7 +48,7 @@ extern "C" {
     
     int _ISN_SaveDataByPointerInBuffer(CFTypeRef pointer, int size) {
         NSData *data = [NSData dataWithBytes:pointer length:(NSUInteger)size];
-        return ISN_SaveDataInBuffer(data);
+        return _ISN_SaveDataInBuffer(data);
     }
     
     int _ISN_SaveDataInBuffer(NSData *data) {
