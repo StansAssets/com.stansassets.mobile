@@ -91,16 +91,16 @@ extern "C" {
     void ISN_SendCallbackToUnity(UnityAction callback, NSString* data);
 
     // MARK: Data Transderer
-    void* ISN_GetPointerForFile(char *url, int *size);
-    void* ISN_GetDataPointerFromBuffer(int hash, int* size);
-    int ISN_SaveDataByPointerInBuffer(CFTypeRef pointer, int size);
-    void* ISN_GetDataByPointer(CFTypeRef pointer, int size);
-    void* ISN_GetNSMutableDataByPointer(NSMutableData *pointer, int *size);
-    int ISN_SaveDataInBuffer(NSData *data);
-    void ISN_ClearBuffer();
-    void ISN_ReleaseData(void* pointer);
-    void ISN_RemoveDataFromBuffer(int hash);
-    NSData* ISN_SendFileByPointer(CFTypeRef pointer, int size);
+    void* _ISN_GetPointerForFile(char *url, int *size);
+    void* _ISN_GetDataPointerFromBuffer(int hash, int* size);
+    int _ISN_SaveDataByPointerInBuffer(CFTypeRef pointer, int size);
+    void* _ISN_GetDataByPointer(CFTypeRef pointer, int size);
+    void* _ISN_GetNSMutableDataByPointer(NSMutableData *pointer, int *size);
+    int _ISN_SaveDataInBuffer(NSData *data);
+    void _ISN_ClearBuffer();
+    void _ISN_ReleaseData(void* pointer);
+    void _ISN_RemoveDataFromBuffer(int hash);
+    NSData* _ISN_SendFileByPointer(CFTypeRef pointer, int size);
     
 #if __cplusplus
 }   // Extern C
